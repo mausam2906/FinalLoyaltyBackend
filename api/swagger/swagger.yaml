@@ -1,0 +1,735 @@
+swagger: "2.0"
+info:
+  description: "Loyalty Program using Blockchain"
+  version: "1.0.0"
+  title: "Loyalty Program using Blockchain"
+  
+  contact:
+    email: "mausam2906@gmail.com"
+  
+host: "localhost:10010"
+tags:
+- name: "company"
+  description: "Operations about company"
+- name: "user"
+  description: "Operations about user"
+  
+schemes:
+- "https"
+- "http"
+paths:
+  /user:
+    x-swagger-router-controller: hello_world
+    post:
+      tags:
+      - "user"
+      summary: "Create user"
+      description: "Registers user to the platform"
+      operationId: "createUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+        400:
+          description: "Invalid email/password supplied"
+      
+  /user/login:
+    x-swagger-router-controller: hello_world
+    get:
+      tags:
+      - "user"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "validateUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "query"
+        description: "The user email for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+        400:
+          description: "Invalid email/password supplied"
+          schema:
+            type: "object"
+        404:
+          description: "404 Page not found"
+          schema:
+            type: "object"
+       
+  /user/transfertoken:
+      x-swagger-router-controller: hello_world
+      get:
+        tags:
+        - "user"
+        summary: "Transfers tokens from one user to another"
+        description: ""
+        operationId: "transferToken"
+        produces:
+        - "application/xml"
+        - "application/json"
+        parameters:
+        - name: "senderaddress"
+          in: "query"
+          description: "The user who is sending tokens"
+          required: true
+          type: "string"
+        - name: "receiveraddress"
+          in: "query"
+          description: "The user who is sending tokens"
+          required: true
+          type: "string"
+        - name: "tokenamount"
+          in: "query"
+          description: "Number of tokens to be sent"
+          required: true
+          type: "string"
+        - name: "companyname"
+          in: "query"
+          description: "Company name of token"
+          required: true
+          type: "string"  
+        responses:
+          200:
+            description: "successful operation"
+            schema:
+              type: "string"
+            headers:
+              X-Rate-Limit:
+                type: "integer"
+                format: "int32"
+                description: "calls per hour allowed by the user"
+              X-Expires-After:
+                type: "string"
+                format: "date-time"
+                description: "date in UTC when token expires"
+          400:
+            description: "Invalid transaction"
+            schema:
+              type: "object"
+
+  /user/exchangetoken:
+      x-swagger-router-controller: hello_world
+      get:
+        tags:
+        - "user"
+        summary: "Exchange tokens of one company with another"
+        description: ""
+        operationId: "exchangeToken"
+        produces:
+        - "application/xml"
+        - "application/json"
+        parameters:
+        - name: "publickey"
+          in: "query"
+          description: "Public key of user"
+          required: true
+          type: "string"
+        - name: "privatekey"
+          in: "query"
+          description: "Private key of user"
+          required: true
+          type: "string"
+        - name: "sellcompanyname"
+          in: "query"
+          description: "Company name of offered company"
+          required: true
+          type: "string"
+        - name: "buycompanyname"
+          in: "query"
+          description: "Company name of required company"
+          required: true
+          type: "string"
+        - name: "amount"
+          in: "query"
+          description: "Number of tokens"
+          required: true
+          type: "string"  
+        responses:
+          200:
+            description: "successful operation"
+            schema:
+              type: "string"
+            headers:
+              X-Rate-Limit:
+                type: "integer"
+                format: "int32"
+                description: "calls per hour allowed by the user"
+              X-Expires-After:
+                type: "string"
+                format: "date-time"
+                description: "date in UTC when token expires"
+          400:
+            description: "Invalid transaction"
+            schema:
+              type: "object"
+
+  /user/logout:
+    get:
+      tags:
+      - "user"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+  /user/getuserdetails:
+      get:
+        tags:
+        - "user"
+        summary: "Fetches user details from database using email of user"
+        description: ""
+        operationId: "getUserDetails"
+        produces:
+        - "application/xml"
+        - "application/json"
+        parameters:
+        - name: "email"
+          in: "query"
+          description: "The user email"
+          required: true
+          type: "string"
+        responses:
+          default:
+            description: "successful operation"
+
+  /user/getOffers:
+    x-swagger-router-controller: hello_world
+    post:
+      tags:
+      - "user"
+      summary: "Check offers"
+      description: "Get offers"
+      operationId: "getOffers"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "query"
+        description: "The email"
+        required: true
+        type: "string"
+      responses:
+        '200':
+          description: "successful operation"
+          schema:
+            type: object
+
+  /user/getAllOffers:
+    x-swagger-router-controller: hello_world
+    post:
+      tags:
+      - "user"
+      summary: "Check all offers"
+      description: "Get all offers"
+      operationId: "getAllOffers"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
+        '200':
+          description: "successful operation"
+          schema:
+            type: object
+
+  /user/effectsOfAccount:
+    x-swagger-router-controller: hello_world
+    post:
+      tags:
+      - "user"
+      summary: "Check offers"
+      description: "Get offers"
+      operationId: "effectsOfAccount"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "query"
+        description: "The email"
+        required: true
+        type: "string"
+      responses:
+        '200':
+          description: "successful operation"
+          schema:
+            type: object
+  
+  /user/getuserbalance:
+    x-swagger-router-controller: hello_world
+    get:
+      tags:
+      - "user"
+      summary: "Fetches user account details from Stellar using stellar id of user"
+      description: ""
+      operationId: "getUserBalance"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "stellarAccountId"
+        in: "query"
+        description: "The user stellar account id"
+        required: true
+        type: "string"
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ApiResponse'
+
+  /user/exchangerate:
+    get:
+      tags:
+      - "user"
+      summary: "Check exchange rates"
+      description: "Get exchange rates"
+      
+      operationId: "exchange"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "companyname"
+        in: "query"
+        description: "Company name which you want to deposit"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+          
+  /user/transactionhistory:
+    get:
+      tags:
+      - "user"
+      summary: "Check user's transaction history"
+      description: "Get user's history"
+      
+      operationId: "history"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+          
+  /user/getpoints:
+    x-swagger-router-controller: hello_world
+    get:
+      tags:
+      - "user"
+      summary: "Receive points for shopping"
+      description: "Get points from company for shopping"
+      
+      operationId: "getPointsforShopping"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+        - name: "email"
+          in: "query"
+          description: "email"
+          required: true
+          type: "string"
+        - name: "tokenname"
+          in: "query"
+          description: "tokenname"
+          required: true
+          type: "string"
+        - name: "amount"
+          in: "query"
+          description: "amount"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+              type: "object"
+        400:
+          description: "operation failed"
+          schema:
+              type: "object"
+
+  /user/buyoffer:
+      x-swagger-router-controller: hello_world
+      post:
+        tags:
+        - "user"
+        summary: "Create company buy offer"
+        description: "Buy offer"
+        operationId: "buyOfferUser"
+        produces:
+        - "application/xml"
+        - "application/json"
+        parameters:
+        - name: "publickey"
+          in: "query"
+          description: "publickey"
+          required: true
+          type: "string"
+        - name: "privatekey"
+          in: "query"
+          description: "privatekey"
+          required: true
+          type: "string"
+        - name: "tokenname"
+          in: "query"
+          description: "tokenname"
+          required: true
+          type: "string"
+        - name: "amount"
+          in: "query"
+          description: "amount"
+          required: true
+          type: "string"
+        responses:
+          200:
+            description: "successful operation"
+            schema:
+              type: "string"
+            headers:
+              X-Rate-Limit:
+                type: "integer"
+                format: "int32"
+                description: "calls per hour allowed by the company"
+              X-Expires-After:
+                type: "string"
+                format: "date-time"
+                description: "date in UTC when token expires"
+          400:
+            description: "buy offer impossi"        
+  /user/{email}:
+    get:
+      tags:
+      - "user"
+      summary: "Get user by user name"
+      description: ""
+      operationId: "getUserByName"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "path"
+        description: "The name that needs to be fetched. Use user1 for testing. "
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+
+    delete:
+      tags:
+      - "user"
+      summary: "Delete user"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "path"
+        description: "The name that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+
+  /company:
+      x-swagger-router-controller: hello_world
+      post:
+        tags:
+        - "company"
+        summary: "Create company account"
+        description: "Registers company to the platform"
+        operationId: "createCompany"
+        produces:
+        - "application/xml"
+        - "application/json"
+        parameters:
+        - in: "body"
+          name: "body"
+          description: "Created company object"
+          required: true
+          schema:
+            $ref: "#/definitions/Company"
+        responses:
+          200:
+            description: "successful operation"
+            schema:
+              type: "string"
+            headers:
+              X-Rate-Limit:
+                type: "integer"
+                format: "int32"
+                description: "calls per hour allowed by the company"
+              X-Expires-After:
+                type: "string"
+                format: "date-time"
+                description: "date in UTC when token expires"
+          400:
+            description: "Invalid email/password supplied"
+            schema:
+              type: "string"
+          409:
+            description: "Data already exists"
+            schema:
+              type: "string"
+
+  /company/getCompanyList:
+      x-swagger-router-controller: hello_world
+      post:
+        tags:
+        - "company"
+        summary: "get company list"
+        description: "company list"
+        operationId: "getCompanyList"
+        produces:
+        - "application/xml"
+        - "application/json"
+        # parameters:
+        # - in: "body"
+        #   name: "body"
+        #   description: "Created company object"
+        #   required: true
+        #   schema:
+        #     $ref: "#/definitions/Company"
+        responses:
+          200:
+            description: "successful operation"
+            schema:
+              type: "string"
+            headers:
+              X-Rate-Limit:
+                type: "integer"
+                format: "int32"
+                description: "calls per hour allowed by the company"
+              X-Expires-After:
+                type: "string"
+                format: "date-time"
+                description: "date in UTC when token expires"
+          400:
+            description: "Invalid email/password supplied"
+            schema:
+              type: "string"
+          409:
+            description: "Data already exists"
+            schema:
+              type: "string"
+              
+  /company/selloffer:
+      x-swagger-router-controller: hello_world
+      post:
+        tags:
+        - "company"
+        summary: "Create company sell offer"
+        description: "Sell offer"
+        operationId: "sellOfferCompany"
+        produces:
+        - "application/xml"
+        - "application/json"
+        parameters:
+        - name: "publickey"
+          in: "query"
+          description: "public key"
+          required: true
+          type: "string"
+        - name: "privatekey"
+          in: "query"
+          description: "private key"
+          required: true
+          type: "string"
+        responses:
+          200:
+            description: "successful operation"
+            schema:
+              type: "string"
+            headers:
+              X-Rate-Limit:
+                type: "integer"
+                format: "int32"
+                description: "calls per hour allowed by the company"
+              X-Expires-After:
+                type: "string"
+                format: "date-time"
+                description: "date in UTC when token expires"
+          400:
+            description: "sell offer failed"  
+  /company/login:
+      x-swagger-router-controller: hello_world
+      get:
+        tags:
+        - "company"
+        summary: "Logs company into the system"
+        description: ""
+        operationId: "validateCompany"
+        produces:
+        - "application/json"
+        parameters:
+        - name: "email"
+          in: "query"
+          description: "The company email for login"
+          required: true
+          type: "string"
+        - name: "password"
+          in: "query"
+          description: "The password for login in clear text"
+          required: true
+          type: "string"
+        responses:
+          200:
+            description: "successful operation"
+            schema:
+              type: "string"
+            headers:
+              X-Rate-Limit:
+                type: "integer"
+                format: "int32"
+                description: "calls per hour allowed by the user"
+              X-Expires-After:
+                type: "string"
+                format: "date-time"
+                description: "date in UTC when token expires"
+          400:
+            description: "Invalid email/password supplied"
+            schema:
+              type: "object"
+definitions:
+  Category:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Category"
+  User:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+      companyname: 
+        type: "string"
+      password:
+        type: "string"
+      country:
+        type: "string"
+      dob:
+        type: "string"
+    xml:
+      name: "User"
+  Company:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      tokenname:
+        type: "string"
+      country:
+        type: "string"
+      companyregno:
+        type: "string"
+      assettype:
+        type: "string"
+    xml:
+      name: "Company"
+  Tag:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Tag"
+  
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

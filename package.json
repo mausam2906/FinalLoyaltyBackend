@@ -1,0 +1,32 @@
+{
+  "name": "loyalty-backend",
+  "version": "0.0.1",
+  "private": true,
+  "description": "New Swagger API Project",
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "main": "app.js",
+  "dependencies": {
+    "cookie-parser": "^1.4.4",
+    "crud-sdk": "0.0.30",
+    "express": "^4.12.3",
+    "express-session": "^1.16.2",
+    "q": "^1.5.1",
+    "request-promise": "^4.2.5",
+    "stellar-sdk": "^2.2.1",
+    "swagger-express-mw": "^0.1.0",
+    "swagger-ui-express": "^4.0.7"
+  },
+  "devDependencies": {
+    "should": "^7.1.0",
+    "supertest": "^1.0.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "swagger project test"
+  },
+  "engines": {
+    "node": "8.x"
+  }
+}
