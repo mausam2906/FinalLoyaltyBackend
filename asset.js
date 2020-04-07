@@ -262,14 +262,14 @@ var changeTrust = async function(companydetail,customerdetail){
 }
 
 var getOffers = async function (pubKey) {
-    console.log("hey")
+    
     var deferred = Q.defer();
     var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
     
     server.offers('accounts', pubKey)
       .call()
       .then(async function (offerResult) {
-        console.log("hello....")
+        
         console.log(offerResult);
         console.log(typeof(offerResult))
         deferred.resolve(offerResult)
@@ -294,15 +294,16 @@ var effectsOfAccount = async function (pubKey) {
         .then(async function (effectResults) {
             //page 1
             console.log("Effect results",effectResults.records)
-            deferred.resolve(effectResults)
+            deferred.resolve(effectResults.records);
             // res.setHeader('Content-Type', 'application/json');
             // res.send(effectResults.records);
         })
         .catch(function (err) {
             console.log(err);
+            deferred.reject(err);
 
         })
-    return deferred.promise
+    return deferred.promise;
 }
 
 // effectsOfAccount("GDX5P24SIOMLOSU2NM7ZT4US5B3N2SX66TUXOYRLLDCLKRY3MVXUUH4U")

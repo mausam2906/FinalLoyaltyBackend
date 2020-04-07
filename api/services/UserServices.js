@@ -112,7 +112,7 @@ exports.getOffers = async function(email){
     console.log(userdetails)
     var offers = await stellarasset.getOffers(userdetails[0].stellarAccountId)
     offers = JSON.stringify(offers)
-    console.log(offers)
+    console.log("Offers=====",offers)
     return offers
 }
 
@@ -126,7 +126,7 @@ exports.getAllOffers = async function(){
     var userdetails = await crud.readByCondition(config.connectionString, config.dbName, 'User', condition, paramNotReq);
     // console.log(userdetails)
     // var offers = "h";
-    console.log(typeof(userdetails))
+    //console.log(typeof(userdetails))
     // for ( x of userdetails){
     //     // offers = await stellarasset.getOffers(userdetails[0].stellarAccountId)
     //     // offers = JSON.stringify(offers)
@@ -134,18 +134,37 @@ exports.getAllOffers = async function(){
     //     console.log("...../.."+x)
     // }
     var i=0;
+    var j=0;
     var offersList = []
     for (var key in userdetails){
         var obj = userdetails[key]
         // console.log("This is obj"+obj.email)
         var offers = await stellarasset.getOffers(obj.stellarAccountId)
-        offersList[i] =offers
-        i=i+1
+
+        if (offers.records.length !=0){
+            for(j=0;j<offers.records.length;j++){
+                var offersOnlyRequired = {}
+                offersOnlyRequired.sellingToken =offers.records[j].selling.asset_code
+                offersOnlyRequired.buyingToken =offers.records[j].buying.asset_code
+                offersOnlyRequired.amount = offers.records[j].amount
+                offersOnlyRequired.price = offers.records[j].price
+                offersList[i] =offersOnlyRequired
+                i++;
+            }
+            
+        }
+
+            
+        
         // offers = JSON.stringify(offers)
         console.log(" "+obj.email +offers)
     }
     // var offers = await stellarasset.getOffers(userdetails[0].stellarAccountId)
-    offersList = JSON.stringify(offersList)
+    offersList = JSON.stringify(Object.assign({}, offersList))
+    offersList= JSON.parse(offersList);  // convert string to json object
+ 
+
+    console.log("Offerlist",offersList);
     // console.log(offers)
 
     return offersList
@@ -157,11 +176,52 @@ exports.effectsOfAccount = async function(email){
     var condition = {}
     condition["email"] = email;
     var userdetails = await crud.readByCondition(config.connectionString, config.dbName, 'User', condition, paramNotReq);
-    console.log(userdetails)
+    //console.log(userdetails)
     var effects = await stellarasset.effectsOfAccount(userdetails[0].stellarAccountId)
-    effects = JSON.stringify(effects)
-    console.log(effects)
-    return effects
+    console.log("Effects before filter",effects)
+    
+    var i=0;
+    var effectsList=[]
+    var j=0;
+    if (effects.length !=0){
+        for(i=0;i<effects.length;i++){
+            if(effects[i].type == "trade"){
+                var effectsOnlyRequired = {}
+                effectsOnlyRequired.created_at =effects[i].created_at
+                effectsOnlyRequired.sold_amount =effects[i].sold_amount
+                effectsOnlyRequired.bought_amount = effects[i].bought_amount
+                effectsOnlyRequired.sold_asset_code = effects[i].sold_asset_code
+                effectsOnlyRequired.bought_asset_code = effects[i].bought_asset_code
+                effectsOnlyRequired.type = "trade"
+                effectsList[j] =effectsOnlyRequired 
+                j++
+            }
+            if(effects[i].type == "account_credited"){
+                var effectsOnlyRequired = {}
+                effectsOnlyRequired.created_at =effects[i].created_at
+                effectsOnlyRequired.asset_code =effects[i].asset_code
+                effectsOnlyRequired.amount = effects[i].amount
+                effectsOnlyRequired.type = "account_credited"
+                effectsList[j] =effectsOnlyRequired 
+                j++
+            }
+            if(effects[i].type == "account_debited"){
+                var effectsOnlyRequired = {}
+                effectsOnlyRequired.created_at =effects[i].created_at
+                effectsOnlyRequired.asset_code =effects[i].asset_code
+                effectsOnlyRequired.amount = effects[i].amount
+                effectsOnlyRequired.type = "account_credited"
+                effectsList[j] =effectsOnlyRequired 
+                j++
+            }
+            
+        }
+        
+    }
+    effectsList = JSON.stringify(Object.assign({}, effectsList))
+    effectsList= JSON.parse(effectsList);  // convert string to json object
+    console.log("this is last",effectsList)
+    return effectsList
 }
 
 exports.getuserdetails= async function (body) {

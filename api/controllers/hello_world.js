@@ -100,7 +100,8 @@ function getAllOffers(req, res, next)
   
   userService.getAllOffers().then(function(response){
     console.log("This is response",response)
-    res.json(JSON.parse(response))
+    
+    res.json(response)
   })
   .catch(function (response) {
     var statusCode = response.statusCode;
@@ -115,7 +116,7 @@ function effectsOfAccount(req, res, next)
   console.log(body)
   userService.effectsOfAccount(body.email.value).then(function(response){
     console.log("This is response",response)
-    res.json(JSON.parse(response))
+    res.json(response)
   })
   .catch(function (response) {
     var statusCode = response.statusCode;
