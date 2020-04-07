@@ -8,7 +8,7 @@
           "email": "mausam2906@gmail.com"
        }
     },
-    "host": "localhost",
+    "host": "172.31.6.161",
     "basePath": "/v2",
     "tags": [
        {
