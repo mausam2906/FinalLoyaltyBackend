@@ -8,7 +8,7 @@
           "email": "mausam2906@gmail.com"
        }
     },
-    "host": "https://loyalty-program-backend.herokuapp.com/",
+    "host": "localhost",
     "basePath": "/v2",
     "tags": [
        {
