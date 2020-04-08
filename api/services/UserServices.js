@@ -140,7 +140,8 @@ exports.getAllOffers = async function(){
         var obj = userdetails[key]
         // console.log("This is obj"+obj.email)
         var offers = await stellarasset.getOffers(obj.stellarAccountId)
-
+        //console.log(offers)
+        
         if (offers.records.length !=0){
             for(j=0;j<offers.records.length;j++){
                 var offersOnlyRequired = {}
@@ -148,6 +149,7 @@ exports.getAllOffers = async function(){
                 offersOnlyRequired.buyingToken =offers.records[j].buying.asset_code
                 offersOnlyRequired.amount = offers.records[j].amount
                 offersOnlyRequired.price = offers.records[j].price
+                offersOnlyRequired.offerid = offers.records[j].id
                 offersList[i] =offersOnlyRequired
                 i++;
             }
