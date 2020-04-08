@@ -307,48 +307,48 @@ var effectsOfAccount = async function (pubKey) {
 }
 
 // effectsOfAccount("GDX5P24SIOMLOSU2NM7ZT4US5B3N2SX66TUXOYRLLDCLKRY3MVXUUH4U")
-exports.makeBuyOffer = async function(companydetail,senderdetail,buyamount){
-    // console.log("Get Uber assets")
-    // console.log(companydetail[0],senderdetail[0])
-    companydetail = companydetail[0];
-    buyerdetail = senderdetail[0];
-    console.log(buyerdetail)
-    var distributionAccountpublicAddress = companydetail.distributionAccountpublicAddress
-    StellarSdk.Network.useTestNetwork();
-    var buyerKeyPairs = StellarSdk.Keypair.fromSecret(buyerdetail.secretKey);
-    // var companyKeyPairs = StellarSdk.Keypair.fromSecret(companydetail.issuingAccountsecretKey)
-    var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
-    var transaction;
-    server.loadAccount(buyerdetail.stellarAccountId)
-        .then(function (receiver) {
-             console.log(receiver)
+// exports.makeBuyOffer = async function(companydetail,senderdetail,buyamount){
+//     // console.log("Get Uber assets")
+//     // console.log(companydetail[0],senderdetail[0])
+//     companydetail = companydetail[0];
+//     buyerdetail = senderdetail[0];
+//     console.log(buyerdetail)
+//     var distributionAccountpublicAddress = companydetail.distributionAccountpublicAddress
+//     StellarSdk.Network.useTestNetwork();
+//     var buyerKeyPairs = StellarSdk.Keypair.fromSecret(buyerdetail.secretKey);
+//     // var companyKeyPairs = StellarSdk.Keypair.fromSecret(companydetail.issuingAccountsecretKey)
+//     var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+//     var transaction;
+//     server.loadAccount(buyerdetail.stellarAccountId)
+//         .then(function (receiver) {
+//              console.log(receiver)
 
-            var transaction = new StellarSdk.TransactionBuilder(receiver,{fee:100})
+//             var transaction = new StellarSdk.TransactionBuilder(receiver,{fee:100})
             
-            .addOperation(StellarSdk.Operation.manageBuyOffer({
-                selling: new StellarSdk.Asset("xlm"),
-                buying: new StellarSdk.Asset(companydetail.tokenname,distributionAccountpublicAddress),
-                buyAmount: buyamount,
-                price:1,
-                offerid:0,
+//             .addOperation(StellarSdk.Operation.manageBuyOffer({
+//                 selling: new StellarSdk.Asset("xlm"),
+//                 buying: new StellarSdk.Asset(companydetail.tokenname,distributionAccountpublicAddress),
+//                 buyAmount: buyamount,
+//                 price:1,
+//                 offerid:0,
 
 
-             }))
-             .addMemo(StellarSdk.Memo.text('Buy offer created'))
-                .setTimeout(100)
-                .build();
+//              }))
+//              .addMemo(StellarSdk.Memo.text('Buy offer created'))
+//                 .setTimeout(100)
+//                 .build();
               
-                transaction.sign(buyerKeyPairs);
-                console.log(transaction)
-            server.submitTransaction(transaction);
-            console.log('Buy offer created')
-            // return "successful"
-        })
-        .catch(function (error) {
-            console.error(error)
-            // res.send(error);
-        });
-}
+//                 transaction.sign(buyerKeyPairs);
+//                 console.log(transaction)
+//             server.submitTransaction(transaction);
+//             console.log('Buy offer created')
+//             // return "successful"
+//         })
+//         .catch(function (error) {
+//             console.error(error)
+//             // res.send(error);
+//         });
+// }
 // exports.makeSellOffer = async function(sellingcompanydetail,buyingcompanydetail,sellerdetail,buyamount,price){
 //     // var deferred = Q.defer();
 //     console.log("Seller details",sellerdetail)
@@ -470,6 +470,76 @@ exports.makeSellOffer = async function(sellingcompanydetail,buyingcompanydetail,
   return deferred.promise
 
 }
+
+exports.makeBuyOffer = async function(sellingcompanydetail,buyingcompanydetail,sellerdetail,sellingamount,buyingamount,price){
+    
+    var deferred = Q.defer();
+    console.log("Seller details",sellerdetail)
+    console.log("Buy amount",sellingamount)
+    console.log(typeof(sellingamount));
+    console.log("Buy amount",buyingamount)
+    console.log(typeof(buyingamount));
+    console.log(price)
+    var sellingcompanystellarAccountId = sellingcompanydetail.stellarAccountId
+    var buyingcompanystellarAccountId = buyingcompanydetail.stellarAccountId
+    console.log("selling "+sellingcompanystellarAccountId)
+    console.log("buying "+buyingcompanystellarAccountId)
+    var sellerKeyPairs = StellarSdk.Keypair.fromSecret(sellerdetail.secretKey);
+    const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+    const account = await server.loadAccount(sellerdetail.stellarAccountId);
+    console.log("Sequence",account.sequence)
+    // var sequence = parseInt(account.sequence)
+    // sequence = sequence 
+    // account.sequence = sequence.toString()
+    // console.log("Sequence",account.sequence)
+    const fee = await server.fetchBaseFee();
+    
+    const transaction = new StellarSdk.TransactionBuilder(account, { 
+            fee,
+            networkPassphrase: StellarSdk.Networks.TESTNET
+          })
+          .addOperation(StellarSdk.Operation.manageBuyOffer({
+            selling: new StellarSdk.Asset(sellingcompanydetail.tokenname,sellingcompanystellarAccountId),
+            buying: new StellarSdk.Asset(buyingcompanydetail.tokenname,buyingcompanystellarAccountId),
+            amount: buyingamount,
+            price:price,
+
+          }))
+          .setTimeout(200)
+    .build();
+    transaction.sign(sellerKeyPairs);
+
+  // Let's see the XDR (encoded in base64) of the transaction we just built
+//   console.log(transaction.toEnvelope().toXDR('base64'));
+  try {
+    const transactionResult = await server.submitTransaction(transaction);
+    // console.log(transactionResult.data)
+    // deferred.resolve(transactionResult.data)
+    console.log(JSON.stringify(transactionResult, null, 2));
+    console.log('\nSuccess! View the transaction at: ');
+    console.log(transactionResult._links.transaction.href);
+    // return "Successful"
+    var response = {}
+    response.statusCode = 200;
+    response.message = "Offer successfully created"
+    deferred.resolve(response)
+    
+  } catch (e) {
+    console.log('An error has occured:');
+    deferred.reject(e.response.data.extras)
+    console.log(e.response.data.extras)
+    // return "Error"
+    // console.log(e);
+    var response = {}
+    response.statusCode = 400;
+    response.message = "Offer Creation Failed"
+    deferred.reject(response)
+    
+  }
+  return deferred.promise
+
+}
+
 
 var getAccountBalance = async function (pubKey) {
         var deferred = Q.defer();
