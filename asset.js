@@ -501,7 +501,7 @@ exports.makeBuyOffer = async function(sellingcompanydetail,buyingcompanydetail,s
           .addOperation(StellarSdk.Operation.manageBuyOffer({
             selling: new StellarSdk.Asset(sellingcompanydetail.tokenname,sellingcompanystellarAccountId),
             buying: new StellarSdk.Asset(buyingcompanydetail.tokenname,buyingcompanystellarAccountId),
-            amount: buyingamount,
+            buyAmount: buyingamount,
             price:price,
 
           }))

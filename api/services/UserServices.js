@@ -296,7 +296,7 @@ exports.makeselloffer = async function (body){
         var transaction = await stellarasset.makeSellOffer(sellingcompanydetails[0],buyingcompanydetails[0],userdetails[0],sellingamount,buyingamount,price)
     }
     else{
-        var price = sellingamount/buyingamount;
+        var price = buyingamount/sellingamount;
         var transaction = await stellarasset.makeBuyOffer(sellingcompanydetails[0],buyingcompanydetails[0],userdetails[0],sellingamount,buyingamount,price)
     }
     console.log("In user service "+transaction)
