@@ -265,8 +265,46 @@ exports.makeselloffer = async function (body){
     var privateaddress = body.privatekey.value;
     var sellcompanyname = body.sellcompanyname.value;
     var buycompanyname = body.buycompanyname.value;
+    var sellingamount = body.sellingamount.value;
+    var buyingamount = body.buyingamount.value;
+    var price = buyingamount/sellingamount;
+
+    var condition = {};
+    condition["name"] = sellcompanyname;
+    var sellingcompanydetails = await crud.readByCondition(config.connectionString, config.dbName, "Company", condition, paramNotReq);
+    console.log("Selling Company", sellingcompanydetails)
+    
+    var condition = {};
+    condition["name"] = buycompanyname;
+    var buyingcompanydetails = await crud.readByCondition(config.connectionString, config.dbName, "Company", condition, paramNotReq);
+    console.log("Buying Company", buyingcompanydetails)
+    
+    condition = {};
+    condition["stellarAccountId"] = publicaddress;
+    
+    var userdetails = await crud.readByCondition(config.connectionString, config.dbName,collectionName, condition, paramNotReq);
+    console.log("User details",userdetails)
+
+    var trust = await stellarasset.changeTrust(buyingcompanydetails[0],userdetails[0]);
+    console.log("Sequence",trust.sequence)
+    // // var trust = await stellarasset.changeTrust(sellingcompanydetails[0],userdetails[0]);
+    // // console.log(trust)
+    // if(trust.sequence > 0){
+    var transaction = await stellarasset.makeSellOffer(sellingcompanydetails[0],buyingcompanydetails[0],userdetails[0],sellingamount,buyingamount,price)
+    console.log("In user service "+transaction)
+    // var data = await stellarasset.sellOfferCompany(companydetails,amount)
+    return transaction
+}
+
+exports.makeselloffersetprice = async function (body){
+    console.log("Inside user services sell offer")
+    // console.log(body)
+    var publicaddress = body.publickey.value;
+    var privateaddress = body.privatekey.value;
+    var sellcompanyname = body.sellcompanyname.value;
+    var buycompanyname = body.buycompanyname.value;
     var amount = body.amount.value;
-    var price = "1"
+    var price = body.price.value;
 
     var condition = {};
     condition["name"] = sellcompanyname;
@@ -294,11 +332,8 @@ exports.makeselloffer = async function (body){
     // var data = await stellarasset.sellOfferCompany(companydetails,amount)
     return transaction
 }
-// exports.exchangetoken = async function (body) {
-//     console.log("Inside user services exchange token")
-//     console.log(body)
-//     var 
-// }
+
+
 exports.getPointsforShopping = async function(body){
     // console.log("Inside get points")
     // console.log(body)

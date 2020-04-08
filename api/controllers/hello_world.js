@@ -24,7 +24,8 @@ module.exports = {
   getPointsforShopping: getPointsforShopping,
   getCompanyList: getCompanyList,
   effectsOfAccount: effectsOfAccount,
-  getAllOffers: getAllOffers
+  getAllOffers: getAllOffers,
+  exchangeTokenSetPrice: exchangeTokenSetPrice
 };
 
 var sess;
@@ -254,6 +255,23 @@ function exchangeToken(req,res,next){
     // res.status(statusCode).send({ message: msg });
   });
 }
+
+function exchangeTokenSetPrice(req,res,next){
+  var body = req.swagger.params;
+  // console.log(body)
+  userService.makeselloffersetprice(body).then(function (response) {
+    console.log("response",response)
+    res.json(response);
+  })
+  .catch(function (response) {
+    console.log("response",response)
+    res.json(response);
+    // var statusCode = response.statusCode;
+    // var msg = response.message;
+    // res.status(statusCode).send({ message: msg });
+  });
+}
+
 
 function sellOfferCompany(req,res,next){
   console.log("Inside sell offer ")

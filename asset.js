@@ -402,12 +402,14 @@ exports.makeBuyOffer = async function(companydetail,senderdetail,buyamount){
 //         })
        
 // }
-exports.makeSellOffer = async function(sellingcompanydetail,buyingcompanydetail,sellerdetail,buyamount,price){
+exports.makeSellOffer = async function(sellingcompanydetail,buyingcompanydetail,sellerdetail,sellingamount,buyingamount,price){
     
     var deferred = Q.defer();
     console.log("Seller details",sellerdetail)
-    console.log("Buy amount",buyamount)
-    console.log(typeof(buyamount));
+    console.log("Buy amount",sellingamount)
+    console.log(typeof(sellingamount));
+    console.log("Buy amount",buyingamount)
+    console.log(typeof(buyingamount));
     console.log(price)
     var sellingcompanystellarAccountId = sellingcompanydetail.stellarAccountId
     var buyingcompanystellarAccountId = buyingcompanydetail.stellarAccountId
@@ -430,8 +432,8 @@ exports.makeSellOffer = async function(sellingcompanydetail,buyingcompanydetail,
           .addOperation(StellarSdk.Operation.manageSellOffer({
             selling: new StellarSdk.Asset(sellingcompanydetail.tokenname,sellingcompanystellarAccountId),
             buying: new StellarSdk.Asset(buyingcompanydetail.tokenname,buyingcompanystellarAccountId),
-            amount: buyamount,
-            price:"1",
+            amount: sellingamount,
+            price:price,
 
           }))
           .setTimeout(200)

@@ -181,11 +181,77 @@ paths:
           description: "Company name of required company"
           required: true
           type: "string"
+        - name: "sellingamount"
+          in: "query"
+          description: "Number of tokens"
+          required: true
+          type: "string"
+        - name: "buyingamount"
+          in: "query"
+          description: "Number of tokens"
+          required: true
+          type: "string" 
+        responses:
+          200:
+            description: "successful operation"
+            schema:
+              type: "string"
+            headers:
+              X-Rate-Limit:
+                type: "integer"
+                format: "int32"
+                description: "calls per hour allowed by the user"
+              X-Expires-After:
+                type: "string"
+                format: "date-time"
+                description: "date in UTC when token expires"
+          400:
+            description: "Invalid transaction"
+            schema:
+              type: "object"
+
+  /user/exchangetokensetprice:
+      x-swagger-router-controller: hello_world
+      get:
+        tags:
+        - "user"
+        summary: "Exchange tokens of one company with another"
+        description: ""
+        operationId: "exchangeTokenSetPrice"
+        produces:
+        - "application/xml"
+        - "application/json"
+        parameters:
+        - name: "publickey"
+          in: "query"
+          description: "Public key of user"
+          required: true
+          type: "string"
+        - name: "privatekey"
+          in: "query"
+          description: "Private key of user"
+          required: true
+          type: "string"
+        - name: "sellcompanyname"
+          in: "query"
+          description: "Company name of offered company"
+          required: true
+          type: "string"
+        - name: "buycompanyname"
+          in: "query"
+          description: "Company name of required company"
+          required: true
+          type: "string"
         - name: "amount"
           in: "query"
           description: "Number of tokens"
           required: true
-          type: "string"  
+          type: "string"
+        - name: "price"
+          in: "query"
+          description: "Price"
+          required: true
+          type: "string"   
         responses:
           200:
             description: "successful operation"
