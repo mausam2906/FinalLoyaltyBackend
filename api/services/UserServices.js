@@ -290,15 +290,15 @@ exports.makeselloffer = async function (body){
     // // var trust = await stellarasset.changeTrust(sellingcompanydetails[0],userdetails[0]);
     // // console.log(trust)
     // if(trust.sequence > 0){
-    if(buyingamount>=sellingamount)
-    {
-        var price = buyingamount/sellingamount;
-        var transaction = await stellarasset.makeSellOffer(sellingcompanydetails[0],buyingcompanydetails[0],userdetails[0],sellingamount,buyingamount,price)
-    }
-    else{
-        var price = buyingamount/sellingamount;
-        var transaction = await stellarasset.makeBuyOffer(sellingcompanydetails[0],buyingcompanydetails[0],userdetails[0],sellingamount,buyingamount,price)
-    }
+    //if(buyingamount>=sellingamount)
+    //{
+    //    var price = buyingamount/sellingamount;
+        var transaction = await stellarasset.makeSellOffer(sellingcompanydetails[0],buyingcompanydetails[0],userdetails[0],sellingamount,buyingamount,"1")
+    //}
+    //else{
+    //    var price = buyingamount/sellingamount;
+    //    var transaction = await stellarasset.makeBuyOffer(sellingcompanydetails[0],buyingcompanydetails[0],userdetails[0],sellingamount,buyingamount,price)
+    //}
     console.log("In user service "+transaction)
     // var data = await stellarasset.sellOfferCompany(companydetails,amount)
     return transaction
