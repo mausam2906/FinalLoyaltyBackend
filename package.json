@@ -14,7 +14,7 @@
     "express-session": "^1.16.2",
     "q": "^1.5.1",
     "request-promise": "^4.2.5",
-    "stellar-sdk": "^2.2.1",
+    "stellar-sdk": "^8.2.3",
     "swagger-express-mw": "^0.1.0",
     "swagger-ui-express": "^4.0.7"
   },
