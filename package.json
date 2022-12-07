@@ -10,17 +10,17 @@
   "dependencies": {
     "cookie-parser": "^1.4.4",
     "crud-sdk": "0.0.30",
-    "express": "^4.12.3",
+    "express": "^4.18.2",
     "express-session": "^1.16.2",
     "q": "^1.5.1",
     "request-promise": "^4.2.5",
     "stellar-sdk": "^2.2.1",
-    "swagger-express-mw": "^0.1.0",
+    "swagger-express-mw": "^0.7.0",
     "swagger-ui-express": "^4.0.7"
   },
   "devDependencies": {
     "should": "^7.1.0",
-    "supertest": "^1.0.0"
+    "supertest": "^6.3.2"
   },
   "scripts": {
     "start": "node app.js",
