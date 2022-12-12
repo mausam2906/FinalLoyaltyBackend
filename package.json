@@ -10,7 +10,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.4",
     "crud-sdk": "0.0.30",
-    "express": "^4.12.3",
+    "express": "^4.17.3",
     "express-session": "^1.16.2",
     "q": "^1.5.1",
     "request-promise": "^4.2.5",
