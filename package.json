@@ -15,12 +15,12 @@
     "q": "^1.5.1",
     "request-promise": "^4.2.5",
     "stellar-sdk": "^2.2.1",
-    "swagger-express-mw": "^0.1.0",
+    "swagger-express-mw": "^0.7.0",
     "swagger-ui-express": "^4.0.7"
   },
   "devDependencies": {
     "should": "^7.1.0",
-    "supertest": "^1.0.0"
+    "supertest": "^6.3.3"
   },
   "scripts": {
     "start": "node app.js",
